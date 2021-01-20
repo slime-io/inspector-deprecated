@@ -1,0 +1,2 @@
+# Slime-Inspector
+用于接受global-sidecar上报的调用信息，并以此生成ServiceFence

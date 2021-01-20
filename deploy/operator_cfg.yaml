@@ -1,0 +1,42 @@
+apiVersion: "config.istio.io/v1alpha2"
+kind: handler
+metadata:
+  name: dependency-handler
+  namespace: istio-telemetry
+spec:
+  adapter: dependencyadapter
+  connection:
+    address: "inspector.istio-system:50051"
+  params:
+    from_service: "a"
+    to_service: "b"
+---
+
+apiVersion: "config.istio.io/v1alpha2"
+kind: instance
+metadata:
+  name: dependency-metric
+  namespace: istio-telemetry
+spec:
+  template: metric
+  params:
+    value: request.size | 0
+    dimensions:
+      request_headers: request.headers["yx-transactionid"] | "unknown"
+      request_host: request.host | "unknown"
+      response_code: response.code | 200
+      source_service: request.headers["x-yanxuan-app"] | "unknown"
+---
+
+apiVersion: "config.istio.io/v1alpha2"
+kind: rule
+metadata:
+  name: dependency-rule
+  namespace: istio-telemetry
+spec:
+  actions:
+  - handler: dependency-handler
+    instances:
+    - dependency-metric
+  match: match(request.host,"*.service.mailsaas") && source.labels["yanxuan/app"] == "qz-ingress-global" && request.headers["x-yanxuan-app"] != "qz-ingress-global.istio-system"
+---

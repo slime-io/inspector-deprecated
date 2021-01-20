@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+// config for dependencyAdapter
+package istio_dependency.config;
+
+import "gogoproto/gogo.proto";
+
+option go_package="config";
+
+// config for dapter
+message Params {
+    // source service
+    string from_service = 1;
+    // destination service
+    string to_service = 2;
+
+}

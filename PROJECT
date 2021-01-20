@@ -1,0 +1,8 @@
+domain: netease.com
+layout: go.kubebuilder.io/v2
+repo: inspector
+resources:
+- group: microservice
+  kind: ServiceFence
+  version: v1alpha1
+version: 3-alpha
